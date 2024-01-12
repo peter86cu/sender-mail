@@ -7,7 +7,6 @@ import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -35,8 +34,7 @@ public class SendMailServiceImpl implements SendMailService {
     
 
 
-	public SendMailServiceImpl() throws IOException, MessagingException {
-		super();
+	public void conectarServer() throws IOException, MessagingException {
 		InputStream propertiesStream = ClassLoader.getSystemResourceAsStream("application.properties");
 		properties.load(propertiesStream);
 		propertiesStream.close();
@@ -83,7 +81,7 @@ public class SendMailServiceImpl implements SendMailService {
 	@Override
 	public ResponseEntity<String> sendMailRegistro(String request) {
 		try{
-			
+			conectarServer();
 			if(!t.isConnected())
 				t.connect();
 			
@@ -112,6 +110,9 @@ public class SendMailServiceImpl implements SendMailService {
                     //de no hacer nada con la excepcion, lanzarla para que el modulo
                     //superior la capture y avise al usuario con un popup, por ejemplo.
 		return new ResponseEntity<String>(me.getMessage(),HttpStatus.NOT_ACCEPTABLE);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
 	}
 	}
 
