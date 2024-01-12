@@ -34,6 +34,17 @@ public class SendMailServiceImpl implements SendMailService {
     
 
 
+	public SendMailServiceImpl() {
+		try {
+			conectarServer();
+		} catch (IOException | MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+
 	public void conectarServer() throws IOException, MessagingException {
 		InputStream propertiesStream = ClassLoader.getSystemResourceAsStream("application.properties");
 		properties.load(propertiesStream);
@@ -81,7 +92,7 @@ public class SendMailServiceImpl implements SendMailService {
 	@Override
 	public ResponseEntity<String> sendMailRegistro(String request) {
 		try{
-			conectarServer();
+			
 			if(!t.isConnected())
 				t.connect();
 			
@@ -110,10 +121,8 @@ public class SendMailServiceImpl implements SendMailService {
                     //de no hacer nada con la excepcion, lanzarla para que el modulo
                     //superior la capture y avise al usuario con un popup, por ejemplo.
 		return new ResponseEntity<String>(me.getMessage(),HttpStatus.NOT_ACCEPTABLE);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
-	}
+	} 
+		
 	}
 
 }
