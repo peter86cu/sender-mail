@@ -2,6 +2,7 @@ package com.shopping.mail.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -26,7 +27,6 @@ import com.google.gson.Gson;
 public class SendMailServiceImpl implements SendMailService {
 	
 	private static  Session session;
-	private static final Properties properties = new Properties();
     private static String password;
     private static String send;
     private static Transport t;
@@ -46,14 +46,25 @@ public class SendMailServiceImpl implements SendMailService {
 
 
 	public void conectarServer() throws IOException, MessagingException {
-		InputStream propertiesStream = ClassLoader.getSystemResourceAsStream("application.properties");
-		properties.load(propertiesStream);
-		propertiesStream.close();
-		send = properties.getProperty("mail.smtp.send");
-		password= properties.getProperty("mail.smtp.password");
-		session = Session.getDefaultInstance(properties);
-		 t = session.getTransport("smtp");
-		t.connect(send, password);
+		 Properties properties = new Properties();
+
+		
+		URL url = this.getClass().getClassLoader().getResource("application.properties");
+		if (url == null) {
+			throw new IllegalArgumentException("application.properties" + " is not found 1");
+		} else {
+			InputStream propertiesStream = url.openStream();
+			properties.load(propertiesStream);
+			propertiesStream.close();
+			send = properties.getProperty("mail.smtp.send");
+			password= properties.getProperty("mail.smtp.password");
+			session = Session.getDefaultInstance(properties);
+			 t = session.getTransport("smtp");
+			t.connect(send, password);
+		}
+		
+		
+		
 		
 	}
 
