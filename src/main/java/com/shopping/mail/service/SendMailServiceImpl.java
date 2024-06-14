@@ -271,13 +271,12 @@ public class SendMailServiceImpl implements SendMailService {
 			if(email.isAdjunto()) {
 				// Agrega el adjunto
 		        FileAttachment attachment = new FileAttachment();
-		        file = new File(email.getArchivo());
-		         FileInputStream fileInputStream = new FileInputStream(file);
-		         byte[] fileBytes = IOUtils.toByteArray(fileInputStream);
-		          encodedFile = Base64.getEncoder().encodeToString(fileBytes);
+		       /* file = new File(email.getArchivo());
+		         FileInputStream fileInputStream = new FileInputStream(fil
+		          encodedFile = Base64.getEncoder().encodeToString(email.getArchivo().getBytes());*/
 		          
-		        attachment.name = file.getName();
-		        attachment.contentBytes = fileBytes;
+		        attachment.name = email.getNombreArchivo();
+		        attachment.contentBytes = email.getArchivo().getBytes();
 		        attachment.oDataType = "#microsoft.graph.fileAttachment";
 		        List<Attachment> attachments = new LinkedList<>();
 		        attachments.add(attachment);
